@@ -7,7 +7,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.3.4",
+    "autoprefixer": "^10.4.0",
     "aws-amplify": "^4.3.8",
+    "postcss": "^8.4.3",
+    "tailwindcss": "^2.2.19",
     "vue": "^3.2.16"
   },
   "devDependencies": {
