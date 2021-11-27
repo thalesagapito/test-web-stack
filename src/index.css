@@ -18,7 +18,3 @@ h2 {
 p {
     @apply font-light text-black;
 }
-
-#app {
-    @apply antialiased flex flex-col container;
-}
