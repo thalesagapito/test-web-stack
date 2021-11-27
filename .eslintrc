@@ -1,0 +1,4 @@
+{
+    "extends": ["@antfu"],
+    "ignorePatterns": ["aws-exports.js", "API.ts", "index.html"]
+}
