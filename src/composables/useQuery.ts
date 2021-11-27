@@ -5,8 +5,8 @@ import { GraphQLAPI, GraphQLResult } from '@aws-amplify/api-graphql'
 
 export function useQuery<Query, QueryVariables extends object>({
   query,
-  variables,
   watchVariables,
+  variables: variablesRef,
   watchVariablesDebounceInMs = 0,
 }: {
   query: string
@@ -18,26 +18,42 @@ export function useQuery<Query, QueryVariables extends object>({
   const errors = ref<GraphQLError[]>()
   const isFetching = ref(false)
 
-  const execute = async() => {
+  async function runQuery(variables: QueryVariables) {
     set(isFetching, true)
+    return GraphQLAPI.graphql({ query, variables }) as GraphQLResult<Query>
+  }
+
+  function defaultResponseHandler(response: GraphQLResult<Query>) {
+    set(data, response.data)
+    set(errors, response.errors)
+  }
+
+  async function fetch(variablesOverride?: QueryVariables, responseHandlerOverride?: (response: GraphQLResult<Query>) => void) {
+    const variables = variablesOverride ?? variablesRef.value
+    const responseHandler = responseHandlerOverride ?? defaultResponseHandler
     try {
-      const response = await GraphQLAPI.graphql({ query, variables }) as GraphQLResult<Query>
-      set(data, response.data)
-      set(errors, response.errors)
+      responseHandler(await runQuery(variables))
     }
     catch (error) {
       // todo handle
     }
-    set(isFetching, false)
+    finally {
+      set(isFetching, false)
+    }
   }
 
-  if (watchVariables)
-    debouncedWatch(variables, execute, { debounce: watchVariablesDebounceInMs })
+  if (watchVariables) {
+    debouncedWatch(
+      variablesRef,
+      variables => fetch(variables),
+      { debounce: watchVariablesDebounceInMs },
+    )
+  }
 
   return {
     data,
     errors,
-    execute,
+    fetch,
     isFetching,
   }
 }
