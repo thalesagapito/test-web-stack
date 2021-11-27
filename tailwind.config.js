@@ -13,6 +13,7 @@ module.exports = {
     },
     fontWeight: {
       light: 300,
+      regular: 400,
       semibold: 600,
     },
     colors: {
