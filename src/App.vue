@@ -27,7 +27,7 @@ const textSearch = ref()
 
 <style scoped lang="postcss">
 .users-list {
-  @apply grid items-center gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4;
+  @apply grid items-center gap-8 grid-cols-1 lg:grid-cols-3;
   h1 {
     @apply leading-none;
   }
