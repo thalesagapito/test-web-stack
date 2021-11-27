@@ -42,11 +42,11 @@ const formattedCreatedAt = computed(() => dateFormatter.format(new Date(props.cr
   @apply w-full flex justify-between items-center space-x-4;
 
   .name {
-    @apply text-left;
+    @apply text-left truncate;
   }
 
   .created-at {
-    @apply text-right;
+    @apply text-right whitespace-nowrap;
     span {
       @apply text-red font-regular;
     }

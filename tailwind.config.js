@@ -33,7 +33,9 @@ module.exports = {
   },
   variants: {
     extend: {
+      borderOpacity: ['disabled'],
       textOpacity: ['disabled'],
+      cursor: ['disabled'],
     },
   },
   plugins: [
