@@ -19,16 +19,16 @@ const props = withDefaults(
 
 <style scoped lang="postcss">
 .base-button {
-  @apply flex justify-center items-center text-center px-6 py-2 rounded
-  uppercase border-2 border-gray-300 font-semibold
-  hover:border-gray-500 focus:border-gray-600 disabled:border-gray-200;
+  @apply flex justify-center items-center text-center px-16 py-6 rounded-lg
+  text-xl uppercase border-4 border-black border-opacity-10 font-semibold transition
+  hover:border-opacity-40 focus:border-opacity-50 disabled:text-opacity-50;
 
   &.primary {
     @apply bg-white;
   }
 
   &.secondary {
-    @apply bg-gray-200;
+    @apply bg-transparent;
   }
 }
 </style>

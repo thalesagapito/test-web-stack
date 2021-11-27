@@ -4,17 +4,17 @@
 
 html,
 body {
-    @apply font-sans font-light;
+    @apply font-sans font-light bg-gray-100;
 }
 
 h1 {
-    @apply text-xl font-light;
+    @apply text-2xl font-light text-black;
 }
 
 h2 {
-    @apply text-lg font-semibold;
+    @apply text-lg font-semibold text-black;
 }
 
 p {
-    @apply font-light;
+    @apply font-light text-black;
 }

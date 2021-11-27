@@ -6,13 +6,26 @@ module.exports = {
       sans: ['Source Sans Pro', 'sans-serif'],
     },
     fontSize: {
-      default: '16px',
-      lg: '1.3125rem',
-      xl: '3rem',
+      'default': '16px',
+      'lg': '1.3125rem',
+      'xl': '1.5rem',
+      '2xl': '3rem',
     },
     fontWeight: {
       light: 300,
       semibold: 600,
+    },
+    colors: {
+      transparent: 'transparent',
+      black: 'rgb(0, 0, 0)',
+      white: 'rgb(255, 255, 255)',
+      gray: {
+        100: '#F8F8F8',
+        200: 'rgb(229, 229, 229)',
+        300: 'rgb(149, 149, 149)',
+        400: 'rgb(124, 124, 124)',
+      },
+      red: 'rgb(162, 45, 39)',
     },
     extend: {
       container: {
@@ -22,7 +35,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      borderColor: ['disabled'],
+      textOpacity: ['disabled'],
     },
   },
   plugins: [
