@@ -1,6 +1,5 @@
 import { ref, Ref } from 'vue'
 import { set, debouncedWatch } from '@vueuse/core'
-import { GraphQLError } from 'graphql/error/GraphQLError'
 import { GraphQLAPI, GraphQLResult } from '@aws-amplify/api-graphql'
 
 export function useQuery<Query, QueryVariables extends object>({
@@ -14,8 +13,8 @@ export function useQuery<Query, QueryVariables extends object>({
   watchVariables?: boolean
   watchVariablesDebounceInMs?: number
 }) {
-  const data = ref<Query>()
-  const errors = ref<GraphQLError[]>()
+  const data = ref<GraphQLResult<Query>['data']>()
+  const errors = ref<GraphQLResult<Query>['errors']>()
   const isFetching = ref(false)
 
   async function runQuery(variables: QueryVariables) {
