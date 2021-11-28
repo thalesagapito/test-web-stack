@@ -18,3 +18,8 @@ h2 {
 p {
     @apply font-light text-black;
 }
+
+input[type='text']:focus,
+button:focus {
+    @apply ring-4 ring-offset-2 ring-opacity-50 ring-gray-200;
+}

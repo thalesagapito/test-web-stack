@@ -2,8 +2,8 @@
 withDefaults(
   defineProps<{
     label: string
-    type: 'primary' | 'secondary'
-    loading: boolean
+    type?: 'primary' | 'secondary'
+    loading?: boolean
   }>(),
   {
     label: '',
@@ -21,10 +21,10 @@ withDefaults(
 
 <style scoped lang="postcss">
 .base-button {
-  @apply flex justify-center items-center text-center
-  px-12 py-5 rounded-lg text-xl uppercase border-4
+  @apply flex justify-center items-center px-12 py-5
+  text-center rounded-lg text-xl uppercase border-4
   border-black border-opacity-10 font-semibold transition
-  hover:border-opacity-40 focus:border-opacity-50
+  outline-none hover:border-opacity-40 focus:border-opacity-50
   disabled:border-opacity-10 disabled:text-opacity-50 disabled:cursor-not-allowed;
 
   &.primary {

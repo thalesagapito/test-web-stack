@@ -43,7 +43,7 @@ const writableModelValue = useVModel(props, 'modelValue')
   input {
     @apply rounded-lg placeholder-black placeholder-opacity-40
     border-black text-xl transition font-light py-3 px-4 w-full
-    outline-none ring-0 border-opacity-10 bg-white focus:border-opacity-40;
+    outline-none border-opacity-10 bg-white focus:border-opacity-40;
   }
 }
 </style>
