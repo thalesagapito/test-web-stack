@@ -1,4 +1,4 @@
-import { ref, Ref } from 'vue'
+import { computed, ref, Ref } from 'vue'
 import { set, debouncedWatch } from '@vueuse/core'
 import { GraphQLAPI, GraphQLResult } from '@aws-amplify/api-graphql'
 
@@ -14,7 +14,9 @@ export function useQuery<Query, QueryVariables extends object>({
   watchVariablesDebounceInMs?: number
 }) {
   const data = ref<GraphQLResult<Query>['data']>()
-  const errors = ref<GraphQLResult<Query>['errors']>()
+  const graphQLErrors = ref<GraphQLResult<Query>['errors']>()
+  const networkErrors = ref<Error[]>()
+  const hasErrors = computed(() => Boolean(graphQLErrors.value?.length || networkErrors.value?.length))
   const isFetching = ref(false)
 
   async function runQuery(variables: QueryVariables) {
@@ -24,7 +26,7 @@ export function useQuery<Query, QueryVariables extends object>({
 
   function defaultResponseHandler(response: GraphQLResult<Query>) {
     set(data, response.data)
-    set(errors, response.errors)
+    set(graphQLErrors, response.errors)
   }
 
   async function fetch(variablesOverride?: QueryVariables, responseHandlerOverride?: (response: GraphQLResult<Query>) => void) {
@@ -34,7 +36,7 @@ export function useQuery<Query, QueryVariables extends object>({
       responseHandler(await runQuery(variables))
     }
     catch (error) {
-      // todo handle
+      networkErrors.value = [error as Error]
     }
     finally {
       set(isFetching, false)
@@ -51,8 +53,10 @@ export function useQuery<Query, QueryVariables extends object>({
 
   return {
     data,
-    errors,
     fetch,
     isFetching,
+    graphQLErrors,
+    networkErrors,
+    hasErrors,
   }
 }
