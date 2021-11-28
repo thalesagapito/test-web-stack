@@ -21,7 +21,7 @@ withDefaults(
 
 <style scoped lang="postcss">
 .base-button {
-  @apply flex justify-center items-center px-12 py-5
+  @apply flex justify-center items-center px-10 py-4
   text-center rounded-lg text-xl uppercase border-4
   border-black border-opacity-10 font-semibold transition
   outline-none hover:border-opacity-40 focus:border-opacity-50
