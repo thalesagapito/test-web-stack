@@ -1,7 +1,7 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    icon: 'edit' | 'delete'
+    icon: 'create' | 'edit' | 'delete'
   }>(),
   {
     icon: undefined,
@@ -12,7 +12,22 @@ withDefaults(
 <template>
   <button class="base-icon-button">
     <svg
-      v-if="icon === 'edit'"
+      v-if="icon === 'create'"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 4v16m8-8H4"
+      />
+    </svg>
+
+    <svg
+      v-else-if="icon === 'edit'"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -45,7 +60,7 @@ withDefaults(
 
 <style scoped lang="postcss">
 .base-icon-button {
-  @apply p-4 bg-white rounded-xl transition text-gray-200
+  @apply p-4 bg-transparent rounded-xl transition text-gray-200
   outline-none hover:text-black focus:text-black;
 
   svg {
