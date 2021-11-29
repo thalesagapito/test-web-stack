@@ -11,9 +11,11 @@
   "dependencies": {
     "@tailwindcss/forms": "^0.3.4",
     "@vueuse/core": "^7.1.2",
+    "@vueuse/router": "^7.1.2",
     "aws-amplify": "^4.3.8",
     "unsplash-js": "^7.0.15",
-    "vue": "^3.2.16"
+    "vue": "^3.2.16",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.10.0",
