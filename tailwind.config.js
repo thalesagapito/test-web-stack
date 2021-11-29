@@ -1,15 +1,15 @@
 module.exports = {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
   theme: {
     fontFamily: {
       sans: ['Source Sans Pro', 'sans-serif'],
     },
     fontSize: {
-      'default': '16px',
-      'lg': '1.3125rem',
-      'xl': '1.5rem',
-      '2xl': '3rem',
+      'base': ['1rem', { lineHeight: '1.5rem' }],
+      'lg': ['1.3125rem', { lineHeight: '1.75rem' }],
+      'xl': ['1.5rem', { lineHeight: '2rem' }],
+      '2xl': ['3rem', { lineHeight: '1' }],
     },
     fontWeight: {
       light: 300,
@@ -18,13 +18,13 @@ module.exports = {
     },
     colors: {
       transparent: 'transparent',
-      black: 'rgb(0, 0, 0)',
-      white: 'rgb(255, 255, 255)',
+      black: '#000000',
+      white: '#FFFFFF',
       gray: {
         100: '#F8F8F8',
         200: '#979797',
       },
-      red: 'rgb(162, 45, 39)',
+      red: '#A22D27',
     },
     extend: {
       container: {
