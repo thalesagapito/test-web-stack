@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { ListUsersQuery } from '../../API'
 import BaseCard from '../base/BaseCard.vue'
 import BaseIconButton from '../base/BaseIconButton.vue'
 import UserCardAvatar from './UserCardAvatar.vue'
-import UserCardTitle from './UserCardTitle.vue'
 
 type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     user?: User
     loading: boolean
@@ -22,6 +22,21 @@ defineEmits<{
   (event: 'edit'): void
   (event: 'delete'): void
 }>()
+
+const dateFormatter = Intl.DateTimeFormat(
+  'en-US',
+  {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  },
+)
+
+const formattedCreatedAt = computed(() => {
+  if (props.user.createdAt)
+    return dateFormatter.format(new Date(props.user.createdAt))
+  return undefined
+})
 </script>
 
 <template>
@@ -34,12 +49,18 @@ defineEmits<{
     <UserCardAvatar :prevent-fetch="loading" />
 
     <template v-if="user">
-      <UserCardTitle
-        v-if="user.name"
-        :name="user.name"
-        :created-at="user.createdAt"
-      />
-      <p v-if="user.description">
+      <div class="title">
+        <h2 class="name">
+          {{ user.name }}
+        </h2>
+
+        <div class="created-at">
+          created
+          <span class="date">{{ formattedCreatedAt }}</span>
+        </div>
+      </div>
+
+      <p v-if="user.description" class="truncate">
         {{ user.description }}
       </p>
     </template>
@@ -59,22 +80,31 @@ defineEmits<{
     @apply animate-pulse pointer-events-none;
   }
 
-  p {
-    @apply truncate;
-  }
-
-  &:deep(.created-at) {
-    @apply invisible opacity-0 transition-all duration-200 ease-in-out;
-  }
-
   .top-buttons {
-    @apply absolute inset-x-2 top-2 flex justify-between items-center
-    invisible opacity-0 transition-all duration-200 ease-in-out;
+    @apply absolute inset-x-2 top-2 flex justify-between items-center opacity-0 transition;
   }
 
-  &:hover .top-buttons,
-  &:hover:deep(.created-at) {
-    @apply visible opacity-100;
+  .title {
+    @apply w-full flex justify-between items-center space-x-4;
+
+    .name {
+      @apply text-left truncate;
+    }
+
+    .created-at {
+      @apply  opacity-0 transition text-right whitespace-nowrap;
+      .date {
+        @apply text-red font-regular;
+      }
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    & .top-buttons,
+    & .created-at {
+      @apply opacity-100;
+    }
   }
 }
 </style>
