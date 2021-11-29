@@ -3,7 +3,7 @@ import { toRef } from 'vue'
 import { ListUsersQuery } from '../../API'
 import BaseButton from '../base/BaseButton.vue'
 import { useListUsersQuery } from '../../composables/queries/useListUsersQuery'
-import UserCardsGridError from './UserCardsGridError.vue'
+import UserCardsGridWarning from './UserCardsGridWarning.vue'
 import UserCard from './UserCard.vue'
 
 type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
@@ -30,11 +30,21 @@ fetch()
 
 <template>
   <keep-alive>
-    <template v-if="isFetching && !users">
+    <template v-if="isFetching && !users?.length">
       <UserCard v-for="i in 6" :key="i" :loading="isFetching" />
     </template>
 
-    <UserCardsGridError v-else-if="hasErrors" class="lg:col-span-3" />
+    <UserCardsGridWarning
+      v-else-if="hasErrors"
+      class="lg:col-span-3"
+      message="an error occurred while fetching the users"
+    />
+
+    <UserCardsGridWarning
+      v-else-if="!users?.length"
+      class="lg:col-span-3"
+      message="we didn't find any users with the specified query"
+    />
 
     <template v-else>
       <UserCard
