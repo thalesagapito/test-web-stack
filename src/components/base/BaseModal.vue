@@ -40,12 +40,10 @@ onKeyUp('Escape', hideModal)
   <teleport to="body">
     <transition @enter="showOverlay" @leave="emitClose">
       <div v-if="isComponentVisible" class="base-modal-wrapper">
-        <!-- overlay -->
         <transition name="fade" @enter="showModal" @after-leave="hideComponent">
           <div v-show="isOverlayVisible" class="overlay" @click.self="hideModal" />
         </transition>
 
-        <!-- card -->
         <transition name="fade-expand" @leave="hideOverlay">
           <div v-show="isModalVisible" :class="[$attrs.class, 'card']">
             <h1 v-if="title" class="title">
