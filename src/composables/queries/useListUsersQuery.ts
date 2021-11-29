@@ -1,16 +1,20 @@
 import { set } from '@vueuse/core'
-import { computed, Ref } from 'vue'
+import { computed, Ref, watch } from 'vue'
 import { ListUsersQuery, ListUsersQueryVariables } from '../../API'
 import { listUsers } from '../../graphql/queries'
 import { useQuery } from '../useQuery'
 
-export function useListUsersQuery(textSearchRef: Ref<string>) {
+type OptionalRef<T> = Ref<T | null | undefined>
+
+export const DEFAULT_ITEMS_LIMIT = 3
+
+export function useListUsersQuery(textSearchRef: OptionalRef<string>, initialLimit: OptionalRef<number>) {
   const query = listUsers
   const variables = computed<ListUsersQueryVariables>(() => ({
     filter: textSearchRef.value
       ? { name: { contains: textSearchRef.value } }
       : null,
-    limit: 3,
+    limit: DEFAULT_ITEMS_LIMIT,
   }))
 
   const { data, fetch, isFetching, graphQLErrors, hasErrors } = useQuery<ListUsersQuery, ListUsersQueryVariables>({
@@ -22,6 +26,7 @@ export function useListUsersQuery(textSearchRef: Ref<string>) {
 
   const users = computed(() => data.value?.listUsers?.items)
   const canFetchMore = computed(() => !!data.value?.listUsers?.nextToken)
+  watch(users, users => initialLimit.value = users?.length || null)
 
   function fetchMore() {
     fetch(
@@ -37,8 +42,7 @@ export function useListUsersQuery(textSearchRef: Ref<string>) {
         set(data, {
           ...response.data,
           listUsers: {
-            ...data.value!.listUsers!,
-            ...response.data?.listUsers,
+            ...response.data!.listUsers!,
             items,
           },
         })

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { toRef } from 'vue'
+import { toRefs } from 'vue'
+import { useVModel } from '@vueuse/core'
 import { ListUsersQuery } from '../../API'
 import BaseButton from '../base/BaseButton.vue'
-import { useListUsersQuery } from '../../composables/queries/useListUsersQuery'
+import { DEFAULT_ITEMS_LIMIT, useListUsersQuery } from '../../composables/queries/useListUsersQuery'
 import UserCardsGridWarning from './UserCardsGridWarning.vue'
 import UserCard from './UserCard.vue'
 
@@ -10,28 +11,32 @@ type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
 
 const props = withDefaults(
   defineProps<{
-    textSearch: string
+    textSearch?: string | null
+    initialLimit?: number | null
   }>(),
   {
-    textSearch: '',
+    textSearch: undefined,
+    initialLimit: undefined,
   },
 )
 
 const emit = defineEmits<{
   (event: 'edit-user', user: User): void
   (event: 'delete-user', user: User): void
+  (event: 'update:initialLimit', value: number): void
 }>()
 
-const textSearch = toRef(props, 'textSearch')
-const { canFetchMore, fetchMore, hasErrors, isFetching, users, fetch } = useListUsersQuery(textSearch)
+const { textSearch } = toRefs(props)
+const writableInitialLimit = useVModel(props, 'initialLimit')
+const { canFetchMore, fetchMore, hasErrors, isFetching, users, fetch } = useListUsersQuery(textSearch, writableInitialLimit)
 
-fetch()
+fetch({ limit: writableInitialLimit.value || DEFAULT_ITEMS_LIMIT })
 </script>
 
 <template>
   <keep-alive>
     <template v-if="isFetching && !users?.length">
-      <UserCard v-for="i in 6" :key="i" :loading="isFetching" />
+      <UserCard v-for="i in DEFAULT_ITEMS_LIMIT" :key="i" :loading="isFetching" />
     </template>
 
     <UserCardsGridWarning
