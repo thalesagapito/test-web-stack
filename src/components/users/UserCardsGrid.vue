@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { listUsers } from '../../graphql/queries'
-import { useQuery } from '../../composables/useQuery'
-import { ListUsersQuery, ListUsersQueryVariables } from '../../API'
+import { toRef } from 'vue'
+import { ListUsersQuery } from '../../API'
 import BaseButton from '../base/BaseButton.vue'
+import { useListUsersQuery } from '../../composables/queries/useListUsersQuery'
+import UserCardsGridError from './UserCardsGridError.vue'
 import UserCard from './UserCard.vue'
+
+type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
 
 const props = withDefaults(
   defineProps<{
@@ -15,64 +17,45 @@ const props = withDefaults(
   },
 )
 
-const query = listUsers
-const variables = computed<ListUsersQueryVariables>(() => ({
-  filter: {
-    name: { contains: props.textSearch },
-  },
-  limit: 6,
-}))
+const emit = defineEmits<{
+  (event: 'edit-user', user: User): void
+  (event: 'delete-user', user: User): void
+}>()
 
-const { data, fetch, isFetching, errors } = useQuery<ListUsersQuery, ListUsersQueryVariables>({
-  query,
-  variables,
-  watchVariables: true,
-  watchVariablesDebounceInMs: 200,
-})
-
-const users = computed(() => data.value?.listUsers?.items)
-const canFetchMore = computed(() => !!data.value?.listUsers?.nextToken)
-
-function fetchMore() {
-  fetch(
-    {
-      ...variables.value,
-      nextToken: data.value?.listUsers?.nextToken,
-    },
-    (response) => {
-      if (response.data?.listUsers) {
-        const previousItems = data.value?.listUsers?.items || []
-        const newItems = response.data.listUsers.items || []
-        const items = [...previousItems, ...newItems]
-        data.value = {
-          ...response.data,
-          listUsers: { ...response.data.listUsers, items },
-        }
-      }
-      errors.value = response.errors
-    },
-  )
-}
+const textSearch = toRef(props, 'textSearch')
+const { canFetchMore, fetchMore, hasErrors, isFetching, users, fetch } = useListUsersQuery(textSearch)
 
 fetch()
 </script>
 
 <template>
-  <UserCard
-    v-for="user in users"
-    :key="user.id"
-    :user="user"
-    :loading="isFetching"
-  />
+  <keep-alive>
+    <template v-if="isFetching && !users">
+      <UserCard v-for="i in 6" :key="i" :loading="isFetching" />
+    </template>
 
-  <BaseButton
-    v-if="canFetchMore"
-    label="load more"
-    :loading="isFetching"
-    :disabled="isFetching"
-    class="fetch-more-button"
-    @click="fetchMore"
-  />
+    <UserCardsGridError v-else-if="hasErrors" class="lg:col-span-3" />
+
+    <template v-else>
+      <UserCard
+        v-for="user in users"
+        :key="user.id"
+        :user="user"
+        :loading="isFetching"
+        @edit="() => $emit('edit-user', user)"
+        @delete="() => $emit('delete-user', user)"
+      />
+
+      <BaseButton
+        v-if="canFetchMore"
+        label="load more"
+        :loading="isFetching"
+        :disabled="isFetching"
+        class="fetch-more-button"
+        @click="fetchMore"
+      />
+    </template>
+  </keep-alive>
 </template>
 
 <style scoped lang="postcss">
