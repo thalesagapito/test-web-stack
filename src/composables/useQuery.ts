@@ -36,7 +36,7 @@ export function useQuery<Query, QueryVariables extends object>({
       responseHandler(await runQuery(variables))
     }
     catch (error) {
-      networkErrors.value = [error as Error]
+      set(networkErrors, [error as Error])
     }
     finally {
       set(isFetching, false)

@@ -78,14 +78,14 @@ export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, limitRef
   function deleteUserLocally(user: User) {
     const currentUsers = data.value?.searchUsers?.items || []
     const items = deleteUserInArray(currentUsers, user)
-    data.value = {
+    set(data, {
       searchUsers: {
         ...data.value?.searchUsers,
         __typename: 'SearchableUserConnection',
         aggregateItems: data.value?.searchUsers?.aggregateItems || [],
         items,
       },
-    }
+    })
   }
 
   function createOrUpdateUserLocally(userToCreateOrUpdate: CreatedOrUpdatedUser, mode: Mode) {
@@ -94,14 +94,14 @@ export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, limitRef
       ? [userToCreateOrUpdate, ...currentUsers]
       : replaceUserInArray(currentUsers, userToCreateOrUpdate)
 
-    data.value = {
+    set(data, {
       searchUsers: {
         ...data.value?.searchUsers,
         __typename: 'SearchableUserConnection',
         aggregateItems: data.value?.searchUsers?.aggregateItems || [],
         items,
       },
-    }
+    })
   }
 
   return {

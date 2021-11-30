@@ -42,8 +42,8 @@ function submit() {
 
 const writableIsOpen = useVModel(props, 'isOpen')
 function close() {
-  writableIsOpen.value = false
-  errorMessage.value = undefined
+  set(writableIsOpen, false)
+  set(errorMessage, undefined)
 }
 </script>
 
