@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { toRefs } from 'vue'
-import { useVModel } from '@vueuse/core'
-import { ListUsersQuery } from '../../API'
+import { ref, toRefs } from 'vue'
+import { set, useVModel } from '@vueuse/core'
 import BaseButton from '../base/BaseButton.vue'
-import { DEFAULT_ITEMS_LIMIT, useListUsersQuery } from '../../composables/queries/useListUsersQuery'
+import { DEFAULT_LIMIT, useListUsersQuery, User } from '../../composables/queries/useListUsersQuery'
 import UserCardsGridWarning from './UserCardsGridWarning.vue'
+import UserDeleteModal from './UserDeleteModal.vue'
 import UserCard from './UserCard.vue'
-
-type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
 
 const props = withDefaults(
   defineProps<{
@@ -20,57 +18,73 @@ const props = withDefaults(
   },
 )
 
-const emit = defineEmits<{
-  (event: 'edit-user', user: User): void
-  (event: 'delete-user', user: User): void
+defineEmits<{
   (event: 'update:initialLimit', value: number): void
 }>()
 
 const { textSearch } = toRefs(props)
 const writableInitialLimit = useVModel(props, 'initialLimit')
 const { canFetchMore, fetchMore, hasErrors, isFetching, users, fetch } = useListUsersQuery(textSearch, writableInitialLimit)
+fetch({ limit: writableInitialLimit.value || DEFAULT_LIMIT })
 
-fetch({ limit: writableInitialLimit.value || DEFAULT_ITEMS_LIMIT })
+const userToDelete = ref<User>()
+const isUserDeleteModalOpen = ref(false)
+function openUserDeleteModal(user: User) {
+  set(userToDelete, user)
+  set(isUserDeleteModalOpen, true)
+}
+
+const userToEdit = ref<User>()
+const isUserEditModalOpen = ref(false)
+function openUserEditModal(user: User) {
+  set(userToEdit, user)
+  set(isUserEditModalOpen, true)
+}
+
 </script>
 
 <template>
-  <keep-alive>
-    <template v-if="isFetching && !users?.length">
-      <UserCard v-for="i in DEFAULT_ITEMS_LIMIT" :key="i" :loading="isFetching" />
-    </template>
+  <template v-if="isFetching && !users?.length">
+    <UserCard v-for="i in DEFAULT_LIMIT" :key="i" :loading="isFetching" />
+  </template>
 
-    <UserCardsGridWarning
-      v-else-if="hasErrors"
-      class="lg:col-span-3"
-      message="an error occurred while fetching the users"
+  <UserCardsGridWarning
+    v-else-if="hasErrors"
+    class="lg:col-span-3"
+    message="an error occurred while fetching the users"
+  />
+
+  <UserCardsGridWarning
+    v-else-if="!users?.length"
+    class="lg:col-span-3"
+    message="we didn't find any users with the specified query"
+  />
+
+  <template v-else>
+    <UserCard
+      v-for="user in users"
+      :key="user.id"
+      :user="user"
+      :loading="isFetching"
+      @edit="() => openUserEditModal(user)"
+      @delete="() => openUserDeleteModal(user)"
     />
 
-    <UserCardsGridWarning
-      v-else-if="!users?.length"
-      class="lg:col-span-3"
-      message="we didn't find any users with the specified query"
+    <BaseButton
+      v-if="canFetchMore"
+      label="load more"
+      :loading="isFetching"
+      :disabled="isFetching"
+      class="fetch-more-button"
+      @click="fetchMore"
     />
+  </template>
 
-    <template v-else>
-      <UserCard
-        v-for="user in users"
-        :key="user.id"
-        :user="user"
-        :loading="isFetching"
-        @edit="() => $emit('edit-user', user)"
-        @delete="() => $emit('delete-user', user)"
-      />
-
-      <BaseButton
-        v-if="canFetchMore"
-        label="load more"
-        :loading="isFetching"
-        :disabled="isFetching"
-        class="fetch-more-button"
-        @click="fetchMore"
-      />
-    </template>
-  </keep-alive>
+  <UserDeleteModal
+    v-model:isOpen="isUserDeleteModalOpen"
+    :user="userToDelete"
+    @delete="fetch"
+  />
 </template>
 
 <style scoped lang="postcss">

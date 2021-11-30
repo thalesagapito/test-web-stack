@@ -45,7 +45,7 @@ function cancel() {
 
 <style scoped lang="postcss">
 .user-create-modal-content {
-  @apply grid grid-cols-1 gap-12 lg:grid-cols-2;
+  @apply grid grid-cols-1 gap-12 lg:grid-cols-2 p-8;
 
   .buttons {
     @apply grid grid-cols-2 gap-8 py-2 lg:gap-12;

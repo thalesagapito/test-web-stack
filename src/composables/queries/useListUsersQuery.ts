@@ -6,7 +6,8 @@ import { useQuery } from '../useQuery'
 
 type OptionalRef<T> = Ref<T | null | undefined>
 
-export const DEFAULT_ITEMS_LIMIT = 3
+export type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
+export const DEFAULT_LIMIT = 3
 
 export function useListUsersQuery(textSearchRef: OptionalRef<string>, initialLimit: OptionalRef<number>) {
   const query = listUsers
@@ -14,7 +15,7 @@ export function useListUsersQuery(textSearchRef: OptionalRef<string>, initialLim
     filter: textSearchRef.value
       ? { name: { contains: textSearchRef.value } }
       : null,
-    limit: DEFAULT_ITEMS_LIMIT,
+    limit: DEFAULT_LIMIT,
   }))
 
   const { data, fetch, isFetching, graphQLErrors, hasErrors } = useQuery<ListUsersQuery, ListUsersQueryVariables>({

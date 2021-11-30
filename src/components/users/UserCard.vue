@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ListUsersQuery } from '../../API'
 import BaseCard from '../base/BaseCard.vue'
 import BaseIconButton from '../base/BaseIconButton.vue'
+import { User } from '../../composables/queries/useListUsersQuery'
 import UserCardAvatar from './UserCardAvatar.vue'
-
-type User = NonNullable<ListUsersQuery['listUsers']>['items'][number]
 
 const props = withDefaults(
   defineProps<{
