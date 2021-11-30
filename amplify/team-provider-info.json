@@ -22,7 +22,7 @@
         "getUserLocation": {
           "secretsPathAmplifyAppId": "dibs5sykotrsv",
           "deploymentBucketName": "amplify-superformula-dev-03320-deployment",
-          "s3Key": "amplify-builds/getUserLocation-4a324d46526777434257-build.zip"
+          "s3Key": "amplify-builds/getUserLocation-48614b48534d72504673-build.zip"
         }
       }
     }
