@@ -1,10 +1,9 @@
 import { ref } from 'vue'
 import { get, set, MaybeRef } from '@vueuse/core'
 import { GraphQLAPI, GraphQLResult } from '@aws-amplify/api-graphql'
+import { GraphQLError } from '../types'
 
-export type GraphQLError = NonNullable<GraphQLResult['errors']>[number]
-
-export type UseMutationArgs = {
+type UseMutationArgs = {
   mutation: MaybeRef<string>
   onError: (error: GraphQLError) => void
   onSuccess: (result: GraphQLResult) => void
