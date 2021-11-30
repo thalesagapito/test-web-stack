@@ -1,13 +1,13 @@
 import { ref } from 'vue'
-import { set } from '@vueuse/core'
+import { get, set, MaybeRef } from '@vueuse/core'
 import { GraphQLAPI, GraphQLResult } from '@aws-amplify/api-graphql'
 
 export type GraphQLError = NonNullable<GraphQLResult['errors']>[number]
 
 export type UseMutationArgs = {
-  mutation: string
+  mutation: MaybeRef<string>
   onError: (error: GraphQLError) => void
-  onSuccess: () => void
+  onSuccess: (result: GraphQLResult) => void
 }
 
 export function useMutation<Mutation extends object, MutationVariables extends object>(args: UseMutationArgs) {
@@ -16,12 +16,12 @@ export function useMutation<Mutation extends object, MutationVariables extends o
 
   function handleResult(result: GraphQLResult<Mutation>) {
     const error = result.errors ? result.errors[0] : undefined
-    error ? onError(error) : onSuccess()
+    error ? onError(error) : onSuccess(result)
   }
 
   async function execute(variables: MutationVariables) {
     set(isExecuting, true)
-    const result = GraphQLAPI.graphql({ query: mutation, variables }) as Promise<GraphQLResult<Mutation>>
+    const result = GraphQLAPI.graphql({ query: get(mutation), variables }) as Promise<GraphQLResult<Mutation>>
     await result.then(handleResult).catch(handleResult)
     set(isExecuting, false)
   }
