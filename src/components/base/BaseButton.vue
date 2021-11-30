@@ -14,7 +14,7 @@ withDefaults(
 </script>
 
 <template>
-  <button :class="{'base-button': true, [type]: true, loading }">
+  <button :disabled="loading" :class="{'base-button': true, [type]: true, loading }">
     {{ label }}
   </button>
 </template>
