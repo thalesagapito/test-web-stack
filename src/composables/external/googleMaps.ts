@@ -6,7 +6,7 @@ const loader = new Loader({ apiKey: import.meta.env.VITE_GOOGLE_API_KEY })
 
 const DEFAULT_MAP_OPTIONS: google.maps.MapOptions = {
   center: { lat: 47.629568, lng: -122.359954 },
-  zoom: 8,
+  zoom: 12,
   panControl: false,
   zoomControl: false,
   mapTypeControl: false,

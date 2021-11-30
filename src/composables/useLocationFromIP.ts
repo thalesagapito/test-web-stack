@@ -1,4 +1,3 @@
-
 import { computed } from 'vue'
 import { RestAPI } from '@aws-amplify/api-rest'
 import { set, useStorage } from '@vueuse/core'
