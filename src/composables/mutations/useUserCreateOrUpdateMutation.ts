@@ -23,9 +23,9 @@ type UseUserCreateOrUpdateMutationArgs = {
 }
 
 export function useUserCreateOrUpdateMutation({ user, ...args }: UseUserCreateOrUpdateMutationArgs) {
-  const name = ref()
-  const address = ref()
-  const description = ref()
+  const name = ref('')
+  const address = ref('')
+  const description = ref('')
 
   watch(user, (user) => {
     set(name, user?.name)

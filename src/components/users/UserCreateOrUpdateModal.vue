@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, toRef } from 'vue'
-import { set, useVModel } from '@vueuse/core'
+import { computed, ref, toRef, watch } from 'vue'
+import { set, templateRef, useVModel } from '@vueuse/core'
 import BaseModal from '../base/BaseModal.vue'
 import BaseInput from '../base/BaseInput.vue'
 import BaseButton from '../base/BaseButton.vue'
+import { useGoogleMaps } from '../../composables/external/googleMaps'
 import { SearchedUser } from '../../composables/queries/useSearchUsersQuery'
 import { Mode, CreatedOrUpdatedUser, useUserCreateOrUpdateMutation } from '../../composables/mutations/useUserCreateOrUpdateMutation'
 
@@ -45,20 +46,21 @@ const {
 })
 
 const title = computed(() => mode.value === 'create' ? 'Create user' : 'Edit user')
-
 const writableIsOpen = useVModel(props, 'isOpen')
 function close() {
   set(writableIsOpen, false)
   set(errorMessage, undefined)
 }
+
+const mapElementRef = templateRef<HTMLElement>('map')
+const { initMap, destroyMap } = useGoogleMaps(mapElementRef, address)
+watch(mapElementRef, mapElement => mapElement ? initMap() : destroyMap())
 </script>
 
 <template>
   <BaseModal v-model:is-open="writableIsOpen" :title="title">
     <div class="user-create-or-update-modal-content">
-      <div class="map">
-        teste map
-      </div>
+      <div ref="map" class="map" />
 
       <div class="form">
         <BaseInput v-model="name" label="Name" />
@@ -93,6 +95,10 @@ function close() {
 <style scoped lang="postcss">
 .user-create-or-update-modal-content {
   @apply grid grid-cols-1 gap-12 p-8 w-screen container;
+
+  .map, &:deep(.gm-err-content) {
+    @apply w-full h-full flex flex-col justify-center items-center;
+  }
 
   .form {
     @apply flex flex-col space-y-6;

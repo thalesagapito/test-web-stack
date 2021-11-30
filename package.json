@@ -9,6 +9,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.12.11",
     "@tailwindcss/forms": "^0.3.4",
     "@vueuse/core": "^7.1.2",
     "@vueuse/router": "^7.1.2",
@@ -24,6 +25,7 @@
     "@storybook/addon-essentials": "^6.4.0",
     "@storybook/addon-links": "^6.4.0",
     "@storybook/vue3": "^6.4.0",
+    "@types/google.maps": "^3.47.0",
     "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@vitejs/plugin-vue": "^1.9.3",
