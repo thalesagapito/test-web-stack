@@ -56,11 +56,13 @@ function close() {
         <BaseButton
           label="Delete"
           type="primary"
+          :disabled="isExecuting"
           :loading="isExecuting"
           @click="submit"
         />
         <BaseButton
           label="Cancel"
+          :disabled="isExecuting"
           :loading="isExecuting"
           type="secondary"
           @click="close"
