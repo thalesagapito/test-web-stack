@@ -80,7 +80,7 @@ function close() {
 
 <template>
   <BaseModal v-model:is-open="writableIsOpen" :title="title">
-    <div class="user-create-modal-content">
+    <div class="user-create-or-update-modal-content">
       <div class="map">
         teste map
       </div>
@@ -115,7 +115,7 @@ function close() {
 </template>
 
 <style scoped lang="postcss">
-.user-create-modal-content {
+.user-create-or-update-modal-content {
   @apply grid grid-cols-1 gap-12 p-8 w-screen container;
 
   .form {
@@ -133,7 +133,7 @@ function close() {
 }
 
 @screen lg {
-  .user-create-modal-content {
+  .user-create-or-update-modal-content {
     grid-template-columns: 5fr 6fr;
   }
 }
