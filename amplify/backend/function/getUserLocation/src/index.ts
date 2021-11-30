@@ -1,12 +1,6 @@
-import fetch from 'node-fetch'
+import IPData from 'ipdata'
 import * as AWS from 'aws-sdk'
 import { APIGatewayProxyHandler } from 'aws-lambda'
-
-async function getUserInfoFromIpData(ip: string, apiKey: string) {
-  const response = await fetch(`https://api.ipdata.co/${ip}?api-key=${apiKey}`)
-  const userDataFromIp = await response.json()
-  return userDataFromIp
-}
 
 export const handler: APIGatewayProxyHandler = async(event) => {
   const { Parameters } = await (new AWS.SSM())
@@ -17,8 +11,10 @@ export const handler: APIGatewayProxyHandler = async(event) => {
     .promise()
   const ipDataApiKey = Parameters[0].Value as string
 
+  const ipData = new IPData(ipDataApiKey)
+
   const userIp = event.requestContext.identity.sourceIp
-  const userDataFromIp = await getUserInfoFromIpData(userIp, ipDataApiKey)
+  const lookupResult = await ipData.lookup(userIp, null, ['city', 'region'])
 
   const response = {
     statusCode: 200,
@@ -26,7 +22,7 @@ export const handler: APIGatewayProxyHandler = async(event) => {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': '*',
     },
-    body: JSON.stringify(userDataFromIp),
+    body: JSON.stringify(lookupResult),
   }
   return response
 }
