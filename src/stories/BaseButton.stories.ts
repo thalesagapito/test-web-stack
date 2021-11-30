@@ -1,3 +1,4 @@
+import { StoryFn } from '@storybook/vue3'
 import BaseButton from '../components/base/BaseButton.vue'
 
 export default {
@@ -18,7 +19,7 @@ export default {
   },
 }
 
-const Template = args => ({
+const Template: StoryFn = args => ({
   components: { BaseButton },
   setup() {
     return { args }
