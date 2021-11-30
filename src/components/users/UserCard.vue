@@ -58,7 +58,7 @@ const formattedCreatedAt = computed(() => {
         </div>
       </div>
 
-      <p v-if="user.description" class="truncate">
+      <p v-if="user.description" class="w-full truncate">
         {{ user.description }}
       </p>
     </template>
