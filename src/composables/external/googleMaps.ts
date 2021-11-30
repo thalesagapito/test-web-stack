@@ -29,7 +29,6 @@ export function useGoogleMaps(mapElementRef: Readonly<Ref<HTMLElement>>, address
     if (mapInstance.value || !isGoogleApiLoaded(googleApi)) return
 
     set(mapInstance, new googleApi.maps.Map(mapElementRef.value, DEFAULT_MAP_OPTIONS))
-    set(geocoderInstance, new googleApi.maps.Geocoder())
   }
 
   function destroyMap() {
@@ -47,14 +46,20 @@ export function useGoogleMaps(mapElementRef: Readonly<Ref<HTMLElement>>, address
 
   loader
     .load()
-    .then(google => set(googleApiRef, google))
+    .then((googleApi) => {
+      set(googleApiRef, googleApi)
+      set(geocoderInstance, new googleApi.maps.Geocoder())
+    })
 
   debouncedWatch(
     addressRef,
     async(address) => {
       if (address && geocoderInstance.value) {
-        const { results } = await geocoderInstance.value.geocode({ address })
-        if (results[0]) moveMapCenter(results[0].geometry.location)
+        const [result] = await geocoderInstance.value
+          .geocode({ address })
+          .then(({ results }) => results)
+          .catch(() => [])
+        if (result) moveMapCenter(result.geometry.location)
       }
     },
     { debounce: 500 },

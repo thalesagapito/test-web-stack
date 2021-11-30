@@ -1,5 +1,4 @@
-import { set } from '@vueuse/core'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { GraphQLResult } from '@aws-amplify/api-graphql'
 import { CreateUserMutation, CreateUserMutationVariables, UpdateUserMutation, UpdateUserMutationVariables } from '../../API'
 import { createUser, updateUser } from '../../graphql/mutations'
@@ -26,12 +25,6 @@ export function useUserCreateOrUpdateMutation({ user, ...args }: UseUserCreateOr
   const name = ref('')
   const address = ref('')
   const description = ref('')
-
-  watch(user, (user) => {
-    set(name, user?.name)
-    set(address, user?.address)
-    set(description, user?.description)
-  })
 
   const mode = computed<Mode>(() => user.value ? 'edit' : 'create')
 

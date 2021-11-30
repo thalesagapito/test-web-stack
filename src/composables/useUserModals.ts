@@ -13,8 +13,8 @@ export function useUserModals() {
   const userToEdit = ref<SearchedUser>()
   const isUserCreateOrUpdateModalOpen = ref(false)
   function openUserCreateOrUpdateModal(user?: SearchedUser) {
-    set(userToEdit, user)
     set(isUserCreateOrUpdateModalOpen, true)
+    set(userToEdit, user)
   }
 
   return {

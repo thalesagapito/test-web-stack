@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, ref, toRef, watch, Ref } from 'vue'
 import { set, templateRef, useVModel } from '@vueuse/core'
 import BaseModal from '../base/BaseModal.vue'
 import BaseInput from '../base/BaseInput.vue'
@@ -25,7 +25,7 @@ const emit = defineEmits<{
   (event: 'update:isOpen', value: boolean): void
 }>()
 
-const user = toRef(props, 'user')
+const user = toRef(props, 'user') as Ref<SearchedUser | undefined>
 const errorMessage = ref<string>()
 
 const {
@@ -46,18 +46,19 @@ const {
   },
 })
 
+function setModalFieldsValues(args: { name?: string | null; address?: string | null; description?: string | null }) {
+  set(name, args.name)
+  set(address, args.address)
+  set(description, args.description)
+}
+
 const title = computed(() => mode.value === 'create' ? 'Create user' : 'Edit user')
 const writableIsOpen = useVModel(props, 'isOpen')
 function close() {
   set(writableIsOpen, false)
-  set(errorMessage, undefined)
 }
 
 const { getUserLocationFromIP, userLocationFromIP } = useLocationFromIP()
-watch(userLocationFromIP, (location) => {
-  if (location && mode.value === 'create' && !address.value) set(address, location)
-})
-
 getUserLocationFromIP()
 
 const mapElementRef = templateRef<HTMLElement>('map')
@@ -69,11 +70,29 @@ watch(
     if (isOpen) initMap()
     else destroyMap()
 
-    if (isOpen && mode.value === 'create')
-      set(address, userLocationFromIP.value)
+    if (isOpen) {
+      const address = mode.value === 'create' ? userLocationFromIP.value : user.value?.address
+      setModalFieldsValues({
+        address,
+        name: user.value?.name,
+        description: user.value?.description,
+      })
+    }
+    else {
+      setModalFieldsValues({
+        address: undefined,
+        name: undefined,
+        description: undefined,
+      })
+      set(errorMessage, undefined)
+    }
   },
   { flush: 'post' },
 )
+
+// click create
+// set user as undefined
+// watch isOpen, copy user
 </script>
 
 <template>

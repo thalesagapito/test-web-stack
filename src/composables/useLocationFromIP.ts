@@ -8,7 +8,7 @@ type UserLocation = {
 }
 
 export function useLocationFromIP() {
-  const userInfoFromIP = useStorage('userInfoFromIP', {} as UserLocation | null)
+  const userInfoFromIP = useStorage('userInfoFromIP', {} as UserLocation)
 
   const userLocationFromIP = computed(() => {
     const { region, city } = userInfoFromIP.value || {}
@@ -16,7 +16,7 @@ export function useLocationFromIP() {
   })
 
   async function getUserLocationFromIP() {
-    if (userInfoFromIP.value) return
+    if (userInfoFromIP.value.city) return
     const response = await RestAPI.get('location', '/location', {})
     set(userInfoFromIP, response)
   }

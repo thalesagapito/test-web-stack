@@ -7,7 +7,7 @@ import { OptionalRef } from '../../types'
 import { useQuery } from '../useQuery'
 
 export type SearchedUser = NonNullable<SearchUsersQuery['searchUsers']>['items'][number]
-export const DEFAULT_LIMIT = 3
+export const DEFAULT_LIMIT = 6
 
 function getVariables(textSearch?: string | null, limit: number | null = DEFAULT_LIMIT): SearchUsersQueryVariables {
   return {
