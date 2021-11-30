@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useUnsplashRandomImage } from '../../composables/unsplash'
+import { useUnsplashRandomImage } from '../../composables/external/unsplash'
 
 const props = withDefaults(
   defineProps<{ preventFetch?: boolean }>(),
