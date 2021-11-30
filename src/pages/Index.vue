@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseInput from '../components/base/BaseInput.vue'
-import { useUserModals } from '../composables/userModals'
+import { useUserModals } from '../composables/useUserModals'
 import UserCardsGrid from '../components/users/UserCardsGrid.vue'
 import BaseIconButton from '../components/base/BaseIconButton.vue'
 import UserDeleteModal from '../components/users/UserDeleteModal.vue'
