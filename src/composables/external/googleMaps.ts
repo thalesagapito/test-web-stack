@@ -2,40 +2,26 @@ import { ref, Ref } from 'vue'
 import { debouncedWatch, set } from '@vueuse/core'
 import { Loader } from '@googlemaps/js-api-loader'
 
-const loader = new Loader({
-  apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
-  version: 'weekly',
-  libraries: ['places'],
-})
+const loader = new Loader({ apiKey: import.meta.env.VITE_GOOGLE_API_KEY })
 
 const DEFAULT_MAP_OPTIONS: google.maps.MapOptions = {
   center: { lat: 47.629568, lng: -122.359954 },
-  zoom: 12,
-
+  zoom: 8,
+  panControl: false,
+  zoomControl: false,
   mapTypeControl: false,
   fullscreenControl: false,
   streetViewControl: false,
+  gestureHandling: 'none',
 }
 
 export function useGoogleMaps(mapElementRef: Readonly<Ref<HTMLElement>>, addressRef: Ref<string>) {
   const googleApiRef = ref<typeof google>()
   const mapInstance = ref<google.maps.Map>()
-  const mapMarkerInstance = ref<google.maps.Marker>()
-  const hasErrorLoadingMap = ref(false)
+  const geocoderInstance = ref<google.maps.Geocoder>()
 
   function isGoogleApiLoaded(googleApi: typeof google | undefined): googleApi is typeof google {
     return googleApi !== undefined
-  }
-
-  function createOrPlaceMarker(latLng: google.maps.LatLng) {
-    const googleApi = googleApiRef.value
-    if (!mapInstance.value || !isGoogleApiLoaded(googleApi)) return
-
-    if (mapMarkerInstance.value)
-      mapMarkerInstance.value.setPosition(latLng)
-
-    else
-      set(mapMarkerInstance, new googleApi.maps.Marker({ position: latLng, map: mapInstance.value }))
   }
 
   function initMap() {
@@ -43,9 +29,7 @@ export function useGoogleMaps(mapElementRef: Readonly<Ref<HTMLElement>>, address
     if (mapInstance.value || !isGoogleApiLoaded(googleApi)) return
 
     set(mapInstance, new googleApi.maps.Map(mapElementRef.value, DEFAULT_MAP_OPTIONS))
-    mapInstance.value!.addListener('click', (click: google.maps.MapMouseEvent) => {
-      if (click.latLng) createOrPlaceMarker(click.latLng)
-    })
+    set(geocoderInstance, new googleApi.maps.Geocoder())
   }
 
   function destroyMap() {
@@ -53,32 +37,32 @@ export function useGoogleMaps(mapElementRef: Readonly<Ref<HTMLElement>>, address
     if (!mapInstance.value || !isGoogleApiLoaded(googleApi)) return
 
     set(mapInstance, null)
-    set(mapMarkerInstance, null)
+  }
+
+  function moveMapCenter(latLng: google.maps.LatLng) {
+    const googleApi = googleApiRef.value
+    if (!mapInstance.value || !isGoogleApiLoaded(googleApi)) return
+    mapInstance.value.panTo(latLng)
   }
 
   loader
     .load()
     .then(google => set(googleApiRef, google))
-    .catch((e) => {
-      // todo log this error
-      set(hasErrorLoadingMap, true)
-    })
 
   debouncedWatch(
     addressRef,
-    () => {
-      // move map center to new address
-      // console.log(address)
-      // if (!address) return
-      // mapInstance.value?.setCenter
+    async(address) => {
+      if (address && geocoderInstance.value) {
+        const { results } = await geocoderInstance.value.geocode({ address })
+        if (results[0]) moveMapCenter(results[0].geometry.location)
+      }
     },
-    { debounce: 300 },
+    { debounce: 500 },
   )
 
   return {
     initMap,
     destroyMap,
     mapInstance,
-    hasErrorLoadingMap,
   }
 }
