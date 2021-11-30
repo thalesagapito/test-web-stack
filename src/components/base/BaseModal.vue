@@ -69,10 +69,10 @@ onKeyUp('Escape', hideModal)
   }
 
   .card {
-    @apply relative w-full flex flex-col bg-gray-100 rounded-xl shadow-xl p-8 container;
+    @apply relative flex flex-col bg-gray-100 rounded-xl shadow-xl mx-auto;
 
     .title {
-      @apply text-left;
+      @apply text-left px-8 pt-8;
     }
 
     .content {
@@ -80,41 +80,5 @@ onKeyUp('Escape', hideModal)
       max-height: calc(100vh - theme('spacing.44'));
     }
   }
-}
-
-/* -------------------------------------------------------------------------- */
-/*                               fade transition                              */
-/* -------------------------------------------------------------------------- */
-.fade-enter-active {
-  @apply ease-in-out duration-500;
-}
-.fade-leave-active {
-  @apply ease-in-out duration-300;
-}
-.fade-enter-from,
-.fade-leave-to {
-  @apply opacity-0;
-}
-.fade-enter-to,
-.fade-leave-from {
-  @apply opacity-100;
-}
-
-/* -------------------------------------------------------------------------- */
-/*                            fade-expand transition                          */
-/* -------------------------------------------------------------------------- */
-.fade-expand-enter-active {
-  @apply ease-in-out duration-300;
-}
-.fade-expand-leave-active {
-  @apply ease-in-out duration-200;
-}
-.fade-expand-enter-from,
-.fade-expand-leave-to {
-  @apply opacity-0 transform scale-90;
-}
-.fade-expand-enter-to,
-.fade-expand-leave-from {
-  @apply opacity-100 transform scale-100
 }
 </style>
