@@ -5,6 +5,7 @@ import BaseModal from '../base/BaseModal.vue'
 import BaseInput from '../base/BaseInput.vue'
 import BaseButton from '../base/BaseButton.vue'
 import { useGoogleMaps } from '../../composables/external/googleMaps'
+import { useLocationFromIP } from '../../composables/useLocationFromIP'
 import { SearchedUser } from '../../composables/queries/useSearchUsersQuery'
 import { Mode, CreatedOrUpdatedUser, useUserCreateOrUpdateMutation } from '../../composables/mutations/useUserCreateOrUpdateMutation'
 
@@ -52,9 +53,27 @@ function close() {
   set(errorMessage, undefined)
 }
 
+const { getUserLocationFromIP, userLocationFromIP } = useLocationFromIP()
+watch(userLocationFromIP, (location) => {
+  if (location && mode.value === 'create' && !address.value) set(address, location)
+})
+
+getUserLocationFromIP()
+
 const mapElementRef = templateRef<HTMLElement>('map')
 const { initMap, destroyMap } = useGoogleMaps(mapElementRef, address)
-watch(mapElementRef, mapElement => mapElement ? initMap() : destroyMap())
+
+watch(
+  writableIsOpen,
+  (isOpen) => {
+    if (isOpen) initMap()
+    else destroyMap()
+
+    if (isOpen && mode.value === 'create')
+      set(address, userLocationFromIP.value)
+  },
+  { flush: 'post' },
+)
 </script>
 
 <template>
