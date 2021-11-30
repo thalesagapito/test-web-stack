@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { set } from '@vueuse/core'
-import { useRouteQueryFilters } from '../composables/useRouteQueryFilters'
-import UserCreateModal from '../components/users/UserCreateModal.vue'
-import BaseIconButton from '../components/base/BaseIconButton.vue'
-import UserCardsGrid from '../components/users/UserCardsGrid.vue'
 import BaseInput from '../components/base/BaseInput.vue'
-
-const isUserCreateModalOpen = ref(false)
-function openUserCreateModal() {
-  set(isUserCreateModalOpen, true)
-}
+import { useUserModals } from '../composables/userModals'
+import UserCardsGrid from '../components/users/UserCardsGrid.vue'
+import BaseIconButton from '../components/base/BaseIconButton.vue'
+import UserDeleteModal from '../components/users/UserDeleteModal.vue'
+import { useRouteQueryFilters } from '../composables/useRouteQueryFilters'
+import { useSearchUsersQuery } from '../composables/queries/useSearchUsersQuery'
+import UserCreateOrEditModal from '../components/users/UserCreateOrEditModal.vue'
 
 const { textSearch, initialLimit } = useRouteQueryFilters()
+const { canFetchMore, fetchMore, hasErrors, isFetching, users, fetch } = useSearchUsersQuery(textSearch, initialLimit)
+fetch()
+
+const {
+  userToDelete,
+  isUserDeleteModalOpen,
+  openUserDeleteModal,
+
+  userToEdit,
+  isUserCreateOrEditModalOpen,
+  openUserCreateOrEditModal,
+} = useUserModals()
+
 </script>
 
 <template>
@@ -22,9 +31,10 @@ const { textSearch, initialLimit } = useRouteQueryFilters()
       <BaseIconButton
         icon="create"
         class="mt-2 ml-4"
-        @click="openUserCreateModal"
+        @click="openUserCreateOrEditModal"
       />
     </h1>
+
     <BaseInput
       v-model="textSearch"
       placeholder="Search..."
@@ -32,13 +42,26 @@ const { textSearch, initialLimit } = useRouteQueryFilters()
     />
 
     <UserCardsGrid
-      v-model:initial-limit="initialLimit"
-      :text-search="textSearch"
+      :users="users"
+      :has-errors="hasErrors"
+      :is-fetching="isFetching"
+      :can-fetch-more="canFetchMore"
+      @edit-user="openUserCreateOrEditModal"
+      @delete-user="openUserDeleteModal"
+      @fetch-more="fetchMore"
     />
   </div>
 
-  <UserCreateModal
-    v-model:isOpen="isUserCreateModalOpen"
+  <UserCreateOrEditModal
+    v-model:isOpen="isUserCreateOrEditModalOpen"
+    :user="userToEdit"
+    @submit="fetch"
+  />
+
+  <UserDeleteModal
+    v-model:isOpen="isUserDeleteModalOpen"
+    :user="userToDelete"
+    @submit="fetch"
   />
 </template>
 
