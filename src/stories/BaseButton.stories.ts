@@ -1,14 +1,19 @@
 import BaseButton from '../components/base/BaseButton.vue'
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
   title: 'Base/Button',
   component: BaseButton,
   argTypes: {
     onClick: {},
     type: {
-      control: { type: 'select' },
+      control: { type: 'radio' },
       options: ['primary', 'secondary'],
+    },
+    loading: {
+      type: 'boolean',
+    },
+    disabled: {
+      type: 'boolean',
     },
   },
 }
