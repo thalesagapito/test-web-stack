@@ -27,7 +27,7 @@ export function useListUsersQuery(textSearchRef: OptionalRef<string>, initialLim
 
   const users = computed(() => data.value?.listUsers?.items)
   const canFetchMore = computed(() => !!data.value?.listUsers?.nextToken)
-  watch(users, users => initialLimit.value = users?.length || null)
+  watch(users, users => set(initialLimit, Math.max(DEFAULT_LIMIT, users?.length || 0)))
 
   function fetchMore() {
     fetch(
