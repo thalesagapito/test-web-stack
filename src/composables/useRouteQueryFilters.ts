@@ -19,14 +19,14 @@ export function useRouteQueryFilters() {
     set: value => set(maybeArrayTextSearch, value),
   })
 
-  const maybeArrayInitialLimit = useRouteQuery('initial-limit')
-  const initialLimit = computed({
-    get: () => maybeArrayToNumber(maybeArrayInitialLimit.value),
-    set: value => set(maybeArrayInitialLimit, value?.toString()),
+  const maybeArrayLimit = useRouteQuery('limit')
+  const limit = computed({
+    get: () => maybeArrayToNumber(maybeArrayLimit.value),
+    set: value => set(maybeArrayLimit, value?.toString()),
   })
 
   return {
     textSearch,
-    initialLimit,
+    limit,
   }
 }

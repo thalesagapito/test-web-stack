@@ -8,8 +8,7 @@ import { useRouteQueryFilters } from '../composables/useRouteQueryFilters'
 import { useSearchUsersQuery } from '../composables/queries/useSearchUsersQuery'
 import UserCreateOrEditModal from '../components/users/UserCreateOrEditModal.vue'
 
-const { textSearch, initialLimit } = useRouteQueryFilters()
-const { canFetchMore, fetchMore, hasErrors, isFetching, users, fetch } = useSearchUsersQuery(textSearch, initialLimit)
+const { textSearch, limit } = useRouteQueryFilters()
 fetch()
 
 const {
