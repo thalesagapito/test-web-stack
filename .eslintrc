@@ -1,4 +1,11 @@
 {
     "extends": ["@antfu"],
-    "ignorePatterns": ["aws-exports.js", "API.ts", "index.html"]
+    "ignorePatterns": [
+        "src/aws-exports.js",
+        "src/API.ts",
+        "index.html",
+        "src/graphql/queries.ts",
+        "src/graphql/mutations.ts",
+        "src/graphql/subscriptions.ts"
+    ]
 }

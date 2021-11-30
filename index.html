@@ -8,10 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <title>SF Users</title>
-    <script>if (global === undefined) var global = window;</script>
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      if (global === undefined) var global = window;
+      window.global = window;
+      var exports = {}
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
