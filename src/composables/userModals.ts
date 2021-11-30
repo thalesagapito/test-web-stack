@@ -11,10 +11,10 @@ export function useUserModals() {
   }
 
   const userToEdit = ref<User>()
-  const isUserCreateOrEditModalOpen = ref(false)
-  function openUserCreateOrEditModal(user?: User) {
+  const isUserCreateOrUpdateModalOpen = ref(false)
+  function openUserCreateOrUpdateModal(user?: User) {
     set(userToEdit, user)
-    set(isUserCreateOrEditModalOpen, true)
+    set(isUserCreateOrUpdateModalOpen, true)
   }
 
   return {
@@ -23,7 +23,7 @@ export function useUserModals() {
     openUserDeleteModal,
 
     userToEdit,
-    isUserCreateOrEditModalOpen,
-    openUserCreateOrEditModal,
+    isUserCreateOrUpdateModalOpen,
+    openUserCreateOrUpdateModal,
   }
 }
