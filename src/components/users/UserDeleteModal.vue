@@ -20,13 +20,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (event: 'submit'): void
+  (event: 'submit', deletedUser: User): void
   (event: 'update:isOpen', value: boolean): void
 }>()
 
 const errorMessage = ref<string>()
 function onSuccess() {
-  emit('submit')
+  emit('submit', props.user)
   close()
 }
 function onError({ message }: GraphQLError) {
