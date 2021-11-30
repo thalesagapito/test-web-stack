@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { set, useVModel } from '@vueuse/core'
-import BaseModal from '../base/BaseModal.vue'
-import BaseInput from '../base/BaseInput.vue'
-import BaseButton from '../base/BaseButton.vue'
+import { GraphQLResult } from '@aws-amplify/api-graphql'
+import { CreateUserMutation, CreateUserMutationVariables, UpdateUserMutation, UpdateUserMutationVariables } from '../../API'
+import { CreatedOrUpdatedUser, Mode } from '../../composables/mutations/useUserCreateOrUpdateMutation'
+import { GraphQLError, useMutation } from '../../composables/useMutation'
+import { User } from '../../composables/queries/useSearchUsersQuery'
 import { createUser, updateUser } from '../../graphql/mutations'
 import { useUserFormData } from '../../composables/userFormData'
-import { User } from '../../composables/queries/useSearchUsersQuery'
-import { GraphQLError, useMutation } from '../../composables/useMutation'
-import { CreateUserMutationVariables, UpdateUserMutationVariables } from '../../API'
-
-type Mode = 'create' | 'edit'
+import BaseButton from '../base/BaseButton.vue'
+import BaseInput from '../base/BaseInput.vue'
+import BaseModal from '../base/BaseModal.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -24,17 +24,22 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (event: 'submit'): void
+  (event: 'submit', user: CreatedOrUpdatedUser, mode: Mode): void
   (event: 'update:isOpen', value: boolean): void
 }>()
 
-const mode = computed<Mode>(() => props.user ? 'edit' : 'create')
+const user = toRef(props, 'user')
+const { name, address, description } = useUserFormData(user)
 
-const { name, address, description } = useUserFormData()
+const mode = computed<Mode>(() => user.value ? 'edit' : 'create')
+const title = computed(() => mode.value === 'create' ? 'Create user' : 'Edit user')
 
 const errorMessage = ref<string>()
-function onSuccess() {
-  emit('submit')
+function onSuccess(result: GraphQLResult) {
+  const user = mode.value === 'create'
+    ? (result as GraphQLResult<CreateUserMutation>).data?.createUser
+    : (result as GraphQLResult<UpdateUserMutation>).data?.updateUser
+  emit('submit', user as CreatedOrUpdatedUser, mode.value)
   close()
 }
 function onError({ message }: GraphQLError) {
@@ -42,14 +47,14 @@ function onError({ message }: GraphQLError) {
   // todo log error message here
 }
 
-const mutation = mode.value === 'create' ? createUser : updateUser
+const mutation = computed(() => mode.value === 'create' ? createUser : updateUser)
 const { execute, isExecuting } = useMutation({ mutation, onSuccess, onError })
 
 function submit() {
-  const variables = mode.value === 'edit' && props.user
+  const variables = mode.value === 'edit' && user.value
     ? {
       input: {
-        id: props.user?.id,
+        id: user.value.id,
         name: name.value,
         address: address.value,
         description: description.value,
@@ -68,16 +73,13 @@ function submit() {
 
 const writableIsOpen = useVModel(props, 'isOpen')
 function close() {
-  set(name, '')
-  set(address, '')
-  set(description, '')
   set(writableIsOpen, false)
   set(errorMessage, undefined)
 }
 </script>
 
 <template>
-  <BaseModal v-model:is-open="writableIsOpen" title="Create user">
+  <BaseModal v-model:is-open="writableIsOpen" :title="title">
     <div class="user-create-modal-content">
       <div class="map">
         teste map
@@ -93,6 +95,7 @@ function close() {
         <BaseButton
           label="Save"
           type="primary"
+          :disabled="!name"
           :loading="isExecuting"
           @click="submit"
         />
@@ -125,7 +128,7 @@ function close() {
   }
 
   .error {
-    @apply col-span-1 lg:col-span-2 text-center text-red text-lg mt-8;
+    @apply col-span-1 lg:col-span-2 text-center text-red text-lg;
   }
 }
 
