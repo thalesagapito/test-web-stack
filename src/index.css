@@ -25,24 +25,6 @@ button:focus {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                               fade transition                              */
-/* -------------------------------------------------------------------------- */
-.fade-enter-active {
-    @apply ease-in-out duration-500;
-}
-.fade-leave-active {
-    @apply ease-in-out duration-300;
-}
-.fade-enter-from,
-.fade-leave-to {
-    @apply opacity-0;
-}
-.fade-enter-to,
-.fade-leave-from {
-    @apply opacity-100;
-}
-
-/* -------------------------------------------------------------------------- */
 /*                            fade-expand transition                          */
 /* -------------------------------------------------------------------------- */
 .fade-expand-enter-active {

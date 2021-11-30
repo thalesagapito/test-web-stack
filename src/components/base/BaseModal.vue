@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
-import { onKeyUp, set } from '@vueuse/core'
+import { onKeyUp } from '@vueuse/core'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title: string
     isOpen: boolean
@@ -17,44 +16,26 @@ const emit = defineEmits<{
   (event: 'update:isOpen', value: boolean): void
 }>()
 
-const isModalVisible = ref(false)
-const showModal = () => set(isModalVisible, true)
-const hideModal = () => set(isModalVisible, false)
+const close = () => emit('update:isOpen', false)
 
-const isOverlayVisible = ref(false)
-const showOverlay = () => set(isOverlayVisible, true)
-const hideOverlay = () => set(isOverlayVisible, false)
-
-const isComponentVisible = ref(false)
-const showComponent = () => set(isComponentVisible, true)
-const hideComponent = () => set(isComponentVisible, false)
-
-watch(() => props.isOpen, isOpen => isOpen ? showComponent() : hideModal())
-
-const emitClose = () => emit('update:isOpen', false)
-const slotProps = reactive({ close: hideModal })
-onKeyUp('Escape', hideModal)
+onKeyUp('Escape', close)
 </script>
 
 <template>
   <teleport to="body">
-    <transition @enter="showOverlay" @leave="emitClose">
-      <div v-if="isComponentVisible" class="base-modal-wrapper">
-        <transition name="fade" @enter="showModal" @after-leave="hideComponent">
-          <div v-show="isOverlayVisible" class="overlay" @click.self="hideModal" />
-        </transition>
+    <transition name="fade-expand">
+      <div v-if="isOpen" class="base-modal-wrapper">
+        <div class="overlay" @click.self="close" />
 
-        <transition name="fade-expand" @leave="hideOverlay">
-          <div v-show="isModalVisible" :class="[$attrs.class, 'card']">
-            <h1 v-if="title" class="title">
-              {{ title }}
-            </h1>
+        <div class="card">
+          <h1 v-if="title" class="title">
+            {{ title }}
+          </h1>
 
-            <div class="content">
-              <slot v-bind="slotProps" />
-            </div>
+          <div class="content">
+            <slot />
           </div>
-        </transition>
+        </div>
       </div>
     </transition>
   </teleport>
@@ -62,10 +43,10 @@ onKeyUp('Escape', hideModal)
 
 <style scoped lang="postcss">
 .base-modal-wrapper {
-  @apply fixed inset-0 overflow-hidden z-30 flex justify-center items-center p-2 m-0;
+  @apply fixed inset-0 z-30 flex justify-center items-center p-2 m-0;
 
   .overlay {
-    @apply absolute inset-0 w-full h-full bg-black bg-opacity-30;
+    @apply fixed -inset-full bg-black bg-opacity-30;
   }
 
   .card {
