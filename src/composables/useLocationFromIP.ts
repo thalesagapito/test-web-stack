@@ -13,7 +13,7 @@ export function useLocationFromIP() {
 
   const userLocationFromIP = computed(() => {
     const { region, city } = userInfoFromIP.value || {}
-    return [region, city].join(', ')
+    return [region, city].filter(Boolean).join(', ')
   })
 
   async function getUserLocationFromIP() {
