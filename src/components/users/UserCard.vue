@@ -72,7 +72,7 @@ const formattedCreatedAt = computed(() => {
 
 <style scoped lang="postcss">
 .user-card {
-  @apply relative flex flex-col items-center p-8 space-y-4;
+  @apply relative flex flex-col items-center p-8 space-y-4 self-stretch;
 
   &.loading {
     @apply animate-pulse pointer-events-none;
