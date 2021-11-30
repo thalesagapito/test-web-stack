@@ -24,5 +24,13 @@
       "type": "cicd",
       "lastPushTimeStamp": "2021-11-30T14:15:18.711Z"
     }
+  },
+  "function": {
+    "getUserLocation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
+    }
   }
 }

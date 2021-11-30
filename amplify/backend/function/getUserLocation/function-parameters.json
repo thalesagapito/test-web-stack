@@ -1,0 +1,6 @@
+{
+  "lambdaLayers": [],
+  "secretNames": [
+    "IP_DATA_API_KEY"
+  ]
+}
