@@ -4,7 +4,7 @@ import { useVModel } from '@vueuse/core'
 const props = withDefaults(
   defineProps<{
     modelValue?: string | null
-    placeholder: string
+    placeholder?: string
     label?: string
   }>(),
   {
