@@ -4,7 +4,7 @@ import { GraphQLAPI, GraphQLResult } from '@aws-amplify/api-graphql'
 
 export type GraphQLError = NonNullable<GraphQLResult['errors']>[number]
 
-type UseMutationArgs = {
+export type UseMutationArgs = {
   mutation: string
   onError: (error: GraphQLError) => void
   onSuccess: () => void
