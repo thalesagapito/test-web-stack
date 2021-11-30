@@ -1,7 +1,8 @@
 import { set } from '@vueuse/core'
 import { computed, ref, Ref, watch } from 'vue'
-import { SearchUsersQuery, SearchUsersQueryVariables } from '../../API'
 import { searchUsers } from '../../graphql/queries'
+import { SearchUsersQuery, SearchUsersQueryVariables } from '../../API'
+import { CreatedOrUpdatedUser, Mode } from '../mutations/useUserCreateOrUpdateMutation'
 import { useQuery } from '../useQuery'
 
 type OptionalRef<T> = Ref<T | null | undefined>
@@ -9,19 +10,26 @@ type OptionalRef<T> = Ref<T | null | undefined>
 export type User = NonNullable<SearchUsersQuery['searchUsers']>['items'][number]
 export const DEFAULT_LIMIT = 3
 
-function getVariables(textSearch?: string | null): SearchUsersQueryVariables {
+function getVariables(textSearch?: string | null, limit: number | null = DEFAULT_LIMIT): SearchUsersQueryVariables {
   return {
     filter: textSearch
       ? { name: { wildcard: `*${textSearch}*` } }
       : undefined,
-    limit: DEFAULT_LIMIT,
+    limit,
   }
 }
 
-export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, initialLimit: OptionalRef<number>) {
+function deleteUserInArray(items: User[], deletedUser: User) {
+  return items.filter(({ id }) => id !== deletedUser.id) || []
+}
+function replaceUserInArray(items: User[], updatedUser: CreatedOrUpdatedUser) {
+  return items.map(user => user.id === updatedUser.id ? updatedUser : user)
+}
+
+export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, limitRef: OptionalRef<number>) {
   const query = searchUsers
 
-  const variables = ref<SearchUsersQueryVariables>(getVariables(textSearchRef.value))
+  const variables = ref<SearchUsersQueryVariables>(getVariables(textSearchRef.value, limitRef.value))
 
   const { data, fetch, isFetching, graphQLErrors, hasErrors } = useQuery<SearchUsersQuery, SearchUsersQueryVariables>({
     query,
@@ -36,7 +44,7 @@ export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, initialL
     return currentUsers.filter(({ name }) => name.toLowerCase().includes(lowerCaseSearch))
   })
   const canFetchMore = computed(() => Boolean(data.value?.searchUsers?.nextToken))
-  watch(users, users => set(initialLimit, users?.length || DEFAULT_LIMIT))
+  watch(users, users => set(limitRef, users?.length || DEFAULT_LIMIT))
 
   watch(textSearchRef, (newValue, oldValue) => {
     if (newValue !== oldValue) {
@@ -67,6 +75,35 @@ export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, initialL
     )
   }
 
+  function deleteUserLocally(user: User) {
+    const currentUsers = data.value?.searchUsers?.items || []
+    const items = deleteUserInArray(currentUsers, user)
+    data.value = {
+      searchUsers: {
+        ...data.value?.searchUsers,
+        __typename: 'SearchableUserConnection',
+        aggregateItems: data.value?.searchUsers?.aggregateItems || [],
+        items,
+      },
+    }
+  }
+
+  function createOrUpdateUserLocally(userToCreateOrUpdate: CreatedOrUpdatedUser, mode: Mode) {
+    const currentUsers = data.value?.searchUsers?.items || []
+    const items = mode === 'create'
+      ? [userToCreateOrUpdate, ...currentUsers]
+      : replaceUserInArray(currentUsers, userToCreateOrUpdate)
+
+    data.value = {
+      searchUsers: {
+        ...data.value?.searchUsers,
+        __typename: 'SearchableUserConnection',
+        aggregateItems: data.value?.searchUsers?.aggregateItems || [],
+        items,
+      },
+    }
+  }
+
   return {
     fetch,
     users,
@@ -74,5 +111,7 @@ export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, initialL
     fetchMore,
     isFetching,
     canFetchMore,
+    deleteUserLocally,
+    createOrUpdateUserLocally,
   }
 }

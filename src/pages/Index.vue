@@ -6,9 +6,19 @@ import BaseIconButton from '../components/base/BaseIconButton.vue'
 import UserDeleteModal from '../components/users/UserDeleteModal.vue'
 import { useRouteQueryFilters } from '../composables/useRouteQueryFilters'
 import { useSearchUsersQuery } from '../composables/queries/useSearchUsersQuery'
-import UserCreateOrEditModal from '../components/users/UserCreateOrEditModal.vue'
+import UserCreateOrUpdateModal from '../components/users/UserCreateOrUpdateModal.vue'
 
 const { textSearch, limit } = useRouteQueryFilters()
+const {
+  canFetchMore,
+  fetchMore,
+  hasErrors,
+  isFetching,
+  users,
+  fetch,
+  deleteUserLocally,
+  createOrUpdateUserLocally,
+} = useSearchUsersQuery(textSearch, limit)
 fetch()
 
 const {
@@ -17,10 +27,9 @@ const {
   openUserDeleteModal,
 
   userToEdit,
-  isUserCreateOrEditModalOpen,
-  openUserCreateOrEditModal,
+  isUserCreateOrUpdateModalOpen,
+  openUserCreateOrUpdateModal,
 } = useUserModals()
-
 </script>
 
 <template>
@@ -30,7 +39,7 @@ const {
       <BaseIconButton
         icon="create"
         class="mt-2 ml-4"
-        @click="openUserCreateOrEditModal"
+        @click="openUserCreateOrUpdateModal"
       />
     </h1>
 
@@ -45,22 +54,22 @@ const {
       :has-errors="hasErrors"
       :is-fetching="isFetching"
       :can-fetch-more="canFetchMore"
-      @edit-user="openUserCreateOrEditModal"
+      @edit-user="openUserCreateOrUpdateModal"
       @delete-user="openUserDeleteModal"
       @fetch-more="fetchMore"
     />
   </div>
 
-  <UserCreateOrEditModal
-    v-model:isOpen="isUserCreateOrEditModalOpen"
+  <UserCreateOrUpdateModal
+    v-model:isOpen="isUserCreateOrUpdateModalOpen"
     :user="userToEdit"
-    @submit="fetch"
+    @submit="createOrUpdateUserLocally"
   />
 
   <UserDeleteModal
     v-model:isOpen="isUserDeleteModalOpen"
     :user="userToDelete"
-    @submit="fetch"
+    @submit="deleteUserLocally"
   />
 </template>
 
