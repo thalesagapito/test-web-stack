@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { set, useVModel } from '@vueuse/core'
+import { GraphQLError } from '../../types'
 import BaseModal from '../base/BaseModal.vue'
 import BaseButton from '../base/BaseButton.vue'
 import { deleteUser } from '../../graphql/mutations'
-import { User } from '../../composables/queries/useSearchUsersQuery'
-import { GraphQLError, useMutation } from '../../composables/useMutation'
+import { useMutation } from '../../composables/useMutation'
+import { SearchedUser } from '../../composables/queries/useSearchUsersQuery'
 import { DeleteUserMutation, DeleteUserMutationVariables } from '../../API'
 
 const props = withDefaults(
   defineProps<{
-    user?: User
+    user?: SearchedUser
     isOpen: boolean
   }>(),
   {
@@ -20,13 +21,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (event: 'submit', deletedUser: User): void
+  (event: 'success', deletedUser: SearchedUser): void
   (event: 'update:isOpen', value: boolean): void
 }>()
 
 const errorMessage = ref<string>()
 function onSuccess() {
-  emit('submit', props.user)
+  emit('success', props.user)
   close()
 }
 function onError({ message }: GraphQLError) {

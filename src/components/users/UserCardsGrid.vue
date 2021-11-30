@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseButton from '../base/BaseButton.vue'
-import { DEFAULT_LIMIT, User } from '../../composables/queries/useSearchUsersQuery'
+import { DEFAULT_LIMIT, SearchedUser } from '../../composables/queries/useSearchUsersQuery'
 import UserCardsGridWarning from './UserCardsGridWarning.vue'
 import UserCard from './UserCard.vue'
 
@@ -9,7 +9,7 @@ const props = withDefaults(
     canFetchMore: boolean
     isFetching: boolean
     hasErrors: boolean
-    users: User[]
+    users: SearchedUser[]
   }>(),
   {
     canFetchMore: false,
@@ -21,8 +21,8 @@ const props = withDefaults(
 
 defineEmits<{
   (event: 'fetchMore'): void
-  (event: 'edit-user', user: User): void
-  (event: 'delete-user', user: User): void
+  (event: 'edit-user', user: SearchedUser): void
+  (event: 'delete-user', user: SearchedUser): void
 }>()
 
 </script>

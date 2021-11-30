@@ -63,13 +63,13 @@ const {
   <UserCreateOrUpdateModal
     v-model:isOpen="isUserCreateOrUpdateModalOpen"
     :user="userToEdit"
-    @submit="createOrUpdateUserLocally"
+    @success="createOrUpdateUserLocally"
   />
 
   <UserDeleteModal
     v-model:isOpen="isUserDeleteModalOpen"
     :user="userToDelete"
-    @submit="deleteUserLocally"
+    @success="deleteUserLocally"
   />
 </template>
 

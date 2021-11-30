@@ -2,12 +2,12 @@
 import { computed } from 'vue'
 import BaseCard from '../base/BaseCard.vue'
 import BaseIconButton from '../base/BaseIconButton.vue'
-import { User } from '../../composables/queries/useSearchUsersQuery'
+import { SearchedUser } from '../../composables/queries/useSearchUsersQuery'
 import UserCardAvatar from './UserCardAvatar.vue'
 
 const props = withDefaults(
   defineProps<{
-    user?: User
+    user?: SearchedUser
     loading: boolean
   }>(),
   {

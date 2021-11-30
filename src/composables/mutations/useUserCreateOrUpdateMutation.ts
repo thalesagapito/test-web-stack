@@ -3,9 +3,9 @@ import { computed, ref, watch } from 'vue'
 import { GraphQLResult } from '@aws-amplify/api-graphql'
 import { CreateUserMutation, CreateUserMutationVariables, UpdateUserMutation, UpdateUserMutationVariables } from '../../API'
 import { createUser, updateUser } from '../../graphql/mutations'
-import { GraphQLError, useMutation } from '../useMutation'
-import { User } from '../queries/useSearchUsersQuery'
-import { OptionalRef } from '../../types'
+import { SearchedUser } from '../queries/useSearchUsersQuery'
+import { GraphQLError, OptionalRef } from '../../types'
+import { useMutation } from '../useMutation'
 
 type CreatedUser = CreateUserMutation['createUser']
 type UpdatedUser = UpdateUserMutation['updateUser']
@@ -17,7 +17,7 @@ type CreateOrUpdateUserMutationVariables = CreateUserMutationVariables | UpdateU
 export type Mode = 'create' | 'edit'
 
 type UseUserCreateOrUpdateMutationArgs = {
-  user: OptionalRef<User>
+  user: OptionalRef<SearchedUser>
   onSuccess: (user: CreatedOrUpdatedUser, mode: Mode) => void
   onError: (errorMessage: string) => void
 }

@@ -1,13 +1,12 @@
 import { set } from '@vueuse/core'
-import { computed, ref, Ref, watch } from 'vue'
-import { searchUsers } from '../../graphql/queries'
-import { SearchUsersQuery, SearchUsersQueryVariables } from '../../API'
+import { computed, ref, watch } from 'vue'
 import { CreatedOrUpdatedUser, Mode } from '../mutations/useUserCreateOrUpdateMutation'
+import { SearchUsersQuery, SearchUsersQueryVariables } from '../../API'
+import { searchUsers } from '../../graphql/queries'
+import { OptionalRef } from '../../types'
 import { useQuery } from '../useQuery'
 
-type OptionalRef<T> = Ref<T | null | undefined>
-
-export type User = NonNullable<SearchUsersQuery['searchUsers']>['items'][number]
+export type SearchedUser = NonNullable<SearchUsersQuery['searchUsers']>['items'][number]
 export const DEFAULT_LIMIT = 3
 
 function getVariables(textSearch?: string | null, limit: number | null = DEFAULT_LIMIT): SearchUsersQueryVariables {
@@ -19,10 +18,10 @@ function getVariables(textSearch?: string | null, limit: number | null = DEFAULT
   }
 }
 
-function deleteUserInArray(items: User[], deletedUser: User) {
+function deleteUserInArray(items: SearchedUser[], deletedUser: SearchedUser) {
   return items.filter(({ id }) => id !== deletedUser.id) || []
 }
-function replaceUserInArray(items: User[], updatedUser: CreatedOrUpdatedUser) {
+function replaceUserInArray(items: SearchedUser[], updatedUser: CreatedOrUpdatedUser) {
   return items.map(user => user.id === updatedUser.id ? updatedUser : user)
 }
 
@@ -75,7 +74,7 @@ export function useSearchUsersQuery(textSearchRef: OptionalRef<string>, limitRef
     )
   }
 
-  function deleteUserLocally(user: User) {
+  function deleteUserLocally(user: SearchedUser) {
     const currentUsers = data.value?.searchUsers?.items || []
     const items = deleteUserInArray(currentUsers, user)
     set(data, {

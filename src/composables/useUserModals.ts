@@ -1,18 +1,18 @@
 import { ref } from 'vue'
 import { set } from '@vueuse/core'
-import { User } from './queries/useSearchUsersQuery'
+import { SearchedUser } from './queries/useSearchUsersQuery'
 
 export function useUserModals() {
-  const userToDelete = ref<User>()
+  const userToDelete = ref<SearchedUser>()
   const isUserDeleteModalOpen = ref(false)
-  function openUserDeleteModal(user: User) {
+  function openUserDeleteModal(user: SearchedUser) {
     set(userToDelete, user)
     set(isUserDeleteModalOpen, true)
   }
 
-  const userToEdit = ref<User>()
+  const userToEdit = ref<SearchedUser>()
   const isUserCreateOrUpdateModalOpen = ref(false)
-  function openUserCreateOrUpdateModal(user?: User) {
+  function openUserCreateOrUpdateModal(user?: SearchedUser) {
     set(userToEdit, user)
     set(isUserCreateOrUpdateModalOpen, true)
   }
