@@ -36,7 +36,7 @@ const writableModelValue = useVModel(props, 'modelValue')
   @apply flex flex-col items-start;
 
   span {
-    @apply font-semibold;
+    @apply font-semibold mb-2;
     font: 1.125rem;
   }
 
