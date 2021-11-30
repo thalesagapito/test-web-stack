@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import BaseCard from '../base/BaseCard.vue'
 import BaseIconButton from '../base/BaseIconButton.vue'
-import { User } from '../../composables/queries/useListUsersQuery'
+import { User } from '../../composables/queries/useSearchUsersQuery'
 import UserCardAvatar from './UserCardAvatar.vue'
 
 const props = withDefaults(

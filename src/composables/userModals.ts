@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { set } from '@vueuse/core'
-import { User } from './queries/useListUsersQuery'
+import { User } from './queries/useSearchUsersQuery'
 
 export function useUserModals() {
   const userToDelete = ref<User>()

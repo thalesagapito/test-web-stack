@@ -6,7 +6,7 @@ import BaseInput from '../base/BaseInput.vue'
 import BaseButton from '../base/BaseButton.vue'
 import { createUser, updateUser } from '../../graphql/mutations'
 import { useUserFormData } from '../../composables/userFormData'
-import { User } from '../../composables/queries/useListUsersQuery'
+import { User } from '../../composables/queries/useSearchUsersQuery'
 import { GraphQLError, useMutation } from '../../composables/useMutation'
 import { CreateUserMutationVariables, UpdateUserMutationVariables } from '../../API'
 

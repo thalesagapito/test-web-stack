@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseButton from '../base/BaseButton.vue'
-import { DEFAULT_LIMIT, User } from '../../composables/queries/useListUsersQuery'
+import { DEFAULT_LIMIT, User } from '../../composables/queries/useSearchUsersQuery'
 import UserCardsGridWarning from './UserCardsGridWarning.vue'
 import UserCard from './UserCard.vue'
 

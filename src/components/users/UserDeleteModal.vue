@@ -4,7 +4,7 @@ import { set, useVModel } from '@vueuse/core'
 import BaseModal from '../base/BaseModal.vue'
 import BaseButton from '../base/BaseButton.vue'
 import { deleteUser } from '../../graphql/mutations'
-import { User } from '../../composables/queries/useListUsersQuery'
+import { User } from '../../composables/queries/useSearchUsersQuery'
 import { GraphQLError, useMutation } from '../../composables/useMutation'
 import { DeleteUserMutation, DeleteUserMutationVariables } from '../../API'
 
