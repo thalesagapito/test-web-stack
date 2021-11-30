@@ -77,7 +77,7 @@ onKeyUp('Escape', hideModal)
 
     .content {
       @apply overflow-y-auto;
-      max-height: calc(100vh - theme('spacing.44'));
+      max-height: calc(100vh - theme('spacing.36'));
     }
   }
 }
