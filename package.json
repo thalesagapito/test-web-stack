@@ -7,7 +7,7 @@
     "serve": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "amplify:getUserLocation": "cd amplify/backend/function/getUserLocation/src && tsc"
+    "amplify:getUserLocation": "cd amplify/backend/function/getUserLocation/src && yarn && tsc"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.12.11",
