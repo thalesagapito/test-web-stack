@@ -6,7 +6,8 @@
         "moduleResolution": "node",
         "skipLibCheck": true,
         "resolveJsonModule": true,
-        "outDir": "lib"
+        "types": ["node"]
     },
-    "exclude": ["node_modules", "lib"]
+    "include": ["."],
+    "exclude": ["node_modules", "**/*.spec.ts", "index.js"]
 }
