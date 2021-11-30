@@ -20,13 +20,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (event: 'delete'): void
+  (event: 'submit'): void
   (event: 'update:isOpen', value: boolean): void
 }>()
 
 const errorMessage = ref<string>()
 function onSuccess() {
-  emit('delete')
+  emit('submit')
   close()
 }
 function onError({ message }: GraphQLError) {
@@ -36,7 +36,7 @@ function onError({ message }: GraphQLError) {
 
 const mutation = deleteUser
 const { execute, isExecuting } = useMutation<DeleteUserMutation, DeleteUserMutationVariables>({ mutation, onSuccess, onError })
-function executeDelete() {
+function submit() {
   execute({ input: { id: props.user.id } })
 }
 
@@ -57,7 +57,7 @@ function close() {
           label="Delete"
           type="primary"
           :loading="isExecuting"
-          @click="executeDelete"
+          @click="submit"
         />
         <BaseButton
           label="Cancel"
