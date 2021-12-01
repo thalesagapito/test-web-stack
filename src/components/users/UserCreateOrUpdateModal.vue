@@ -97,19 +97,20 @@ watch(
 
 <template>
   <BaseModal v-model:is-open="writableIsOpen" :title="title">
-    <div class="user-create-or-update-modal-content">
+    <div class="user-create-or-update-modal-content" data-cy="createOrUpdateUserModal">
       <div ref="map" class="map" />
 
       <div class="form">
-        <BaseInput v-model="name" label="Name" />
-        <BaseInput v-model="address" label="Address" />
-        <BaseInput v-model="description" label="Description" />
+        <BaseInput v-model="name" label="Name" data-cy="nameInput" />
+        <BaseInput v-model="address" label="Address" data-cy="addressInput" />
+        <BaseInput v-model="description" label="Description" data-cy="descriptionInput" />
       </div>
 
       <div class="buttons">
         <BaseButton
           label="Save"
           type="primary"
+          data-cy="submitCreateOrUpdateUser"
           :disabled="!name || isExecuting"
           :loading="isExecuting"
           @click="submit"

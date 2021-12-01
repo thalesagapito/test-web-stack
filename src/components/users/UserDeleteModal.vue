@@ -50,13 +50,14 @@ function close() {
 
 <template>
   <BaseModal v-model:is-open="writableIsOpen" title="Delete user">
-    <div class="user-delete-modal-content">
+    <div class="user-delete-modal-content" data-cy="deleteUserModal">
       <h2>Are you sure you want to delete "{{ user?.name }}"?</h2>
 
       <div class="buttons">
         <BaseButton
           label="Delete"
           type="primary"
+          data-cy="submitDeleteUser"
           :disabled="isExecuting"
           :loading="isExecuting"
           @click="submit"

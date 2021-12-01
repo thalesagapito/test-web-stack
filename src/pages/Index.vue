@@ -39,12 +39,14 @@ const {
       <BaseIconButton
         icon="create"
         class="mt-2 ml-4"
+        data-cy="openCreateUserModal"
         @click="openUserCreateOrUpdateModal"
       />
     </h1>
 
     <BaseInput
       v-model="textSearch"
+      data-cy="textSearchInput"
       placeholder="Search..."
       class="text-search-input"
     />

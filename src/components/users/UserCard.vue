@@ -38,17 +38,17 @@ const formattedCreatedAt = computed(() => {
 </script>
 
 <template>
-  <BaseCard :class="{ 'user-card': true, loading }">
+  <BaseCard :class="{ 'user-card': true, loading }" data-cy="userCard">
     <div class="top-buttons">
-      <BaseIconButton icon="edit" @click="$emit('edit')" />
-      <BaseIconButton icon="delete" @click="$emit('delete')" />
+      <BaseIconButton icon="edit" data-cy="editUser" @click="$emit('edit')" />
+      <BaseIconButton icon="delete" data-cy="deleteUser" @click="$emit('delete')" />
     </div>
 
     <UserCardAvatar :prevent-fetch="loading" />
 
     <template v-if="user">
       <div class="title">
-        <h2 class="name">
+        <h2 class="name" data-cy="userCardName">
           {{ user.name }}
         </h2>
 
