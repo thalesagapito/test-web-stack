@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { set, useVModel } from '@vueuse/core'
-import { GraphQLError } from '../../types'
 import BaseModal from '../base/BaseModal.vue'
 import BaseButton from '../base/BaseButton.vue'
 import { deleteUser } from '../../graphql/mutations'
@@ -30,9 +29,8 @@ function onSuccess() {
   emit('success', props.user)
   close()
 }
-function onError({ message }: GraphQLError) {
+function onError() {
   set(errorMessage, 'An error occurred while trying to delete the user')
-  // todo log error message here
 }
 
 const mutation = deleteUser

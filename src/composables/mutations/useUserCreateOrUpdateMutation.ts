@@ -3,8 +3,8 @@ import { GraphQLResult } from '@aws-amplify/api-graphql'
 import { CreateUserMutation, CreateUserMutationVariables, UpdateUserMutation, UpdateUserMutationVariables } from '../../API'
 import { createUser, updateUser } from '../../graphql/mutations'
 import { SearchedUser } from '../queries/useSearchUsersQuery'
-import { GraphQLError, OptionalRef } from '../../types'
 import { useMutation } from '../useMutation'
+import { OptionalRef } from '../../types'
 
 type CreatedUser = CreateUserMutation['createUser']
 type UpdatedUser = UpdateUserMutation['updateUser']
@@ -37,8 +37,7 @@ export function useUserCreateOrUpdateMutation({ user, ...args }: UseUserCreateOr
     args.onSuccess(user, mode.value)
   }
 
-  function onError({ message }: GraphQLError) {
-    // todo log error message here
+  function onError() {
     args.onError(`An error occurred while trying to ${mode.value} the user`)
   }
 
