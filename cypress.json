@@ -2,5 +2,6 @@
   "baseUrl": "http://localhost:3000",
   "blockHosts": [
     "*.unsplash.com"
-  ]
+  ],
+  "defaultCommandTimeout": 6000
 }
