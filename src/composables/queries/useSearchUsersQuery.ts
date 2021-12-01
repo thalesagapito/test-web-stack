@@ -9,12 +9,12 @@ import { useQuery } from '../useQuery'
 export type SearchedUser = NonNullable<SearchUsersQuery['searchUsers']>['items'][number]
 export const DEFAULT_LIMIT = 6
 
-function getVariables(textSearch?: string | null, limit: number | null = DEFAULT_LIMIT): SearchUsersQueryVariables {
+function getVariables(textSearch?: string | null, limit?: number | null): SearchUsersQueryVariables {
   return {
     filter: textSearch
       ? { name: { wildcard: `*${textSearch}*` } }
       : undefined,
-    limit,
+    limit: limit || DEFAULT_LIMIT,
   }
 }
 
