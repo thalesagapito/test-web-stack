@@ -7,8 +7,8 @@
     "serve": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "cypress:run": "cypress run",
-    "cypress:open": "cypress open",
+    "test:unit": "jest",
+    "test:e2e": "cypress run",
     "amplify:getUserLocation": "cd amplify/backend/function/getUserLocation/src && yarn && tsc"
   },
   "dependencies": {
@@ -30,20 +30,26 @@
     "@storybook/vue3": "^6.4.0",
     "@types/faker": "^5.5.9",
     "@types/google.maps": "^3.47.0",
+    "@types/jest": "^27.0.3",
     "@types/node": "^16.11.10",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@vitejs/plugin-vue": "^1.9.3",
+    "@vue/test-utils": "^2.0.0-rc.17",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.3",
     "cypress": "^9.1.0",
     "eslint": "^8.3.0",
     "faker": "^5.5.3",
+    "jest": "^27.4.2",
     "postcss": "^8.4.4",
     "storybook-builder-vite": "^0.1.10",
     "tailwindcss": "^2.2.19",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.2",
     "vite": "^2.6.4",
     "vue-loader": "^16.8.3",
-    "vue-tsc": "^0.3.0"
+    "vue-tsc": "^0.3.0",
+    "vue3-jest": "^27.0.0-alpha.2"
   }
 }
