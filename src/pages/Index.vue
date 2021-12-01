@@ -40,7 +40,7 @@ const {
         icon="create"
         class="mt-2 ml-4"
         data-cy="openCreateUserModal"
-        @click="openUserCreateOrUpdateModal"
+        @click="openUserCreateOrUpdateModal()"
       />
     </h1>
 

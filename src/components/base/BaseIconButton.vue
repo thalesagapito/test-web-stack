@@ -7,14 +7,10 @@ withDefaults(
     icon: undefined,
   },
 )
-
-defineEmits<{
-  (event: 'click'): void
-}>()
 </script>
 
 <template>
-  <button class="base-icon-button" @click="$emit('click')">
+  <button class="base-icon-button">
     <svg
       v-if="icon === 'create'"
       xmlns="http://www.w3.org/2000/svg"
