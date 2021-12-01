@@ -137,6 +137,7 @@ watch(
 
   .map, &:deep(.gm-err-content) {
     @apply w-full h-full flex flex-col justify-center items-center;
+    min-height: 12rem;
   }
 
   .form {
