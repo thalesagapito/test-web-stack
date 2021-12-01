@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import BaseCard from '../base/BaseCard.vue'
 import BaseIconButton from '../base/BaseIconButton.vue'
 import { SearchedUser } from '../../composables/queries/useSearchUsersQuery'
 import UserCardAvatar from './UserCardAvatar.vue'
@@ -38,7 +37,7 @@ const formattedCreatedAt = computed(() => {
 </script>
 
 <template>
-  <BaseCard :class="{ 'user-card': true, loading }" data-cy="userCard">
+  <div :class="{ 'user-card': true, loading }" data-cy="userCard">
     <div class="top-buttons">
       <BaseIconButton icon="edit" data-cy="editUser" @click="$emit('edit')" />
       <BaseIconButton icon="delete" data-cy="deleteUser" @click="$emit('delete')" />
@@ -67,12 +66,13 @@ const formattedCreatedAt = computed(() => {
       <div class="w-full h-7 bg-gray-100 rounded-lg mt-4" />
       <div class="w-full h-5 bg-gray-100 rounded-lg mt-4" />
     </div>
-  </BaseCard>
+  </div>
 </template>
 
 <style scoped lang="postcss">
 .user-card {
-  @apply relative flex flex-col items-center p-8 space-y-4 self-stretch;
+  @apply bg-white rounded-lg transition hover:shadow-xl
+  relative flex flex-col items-center p-8 space-y-4 self-stretch;
 
   &.loading {
     @apply animate-pulse pointer-events-none;
