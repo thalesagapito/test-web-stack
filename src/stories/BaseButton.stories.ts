@@ -21,9 +21,7 @@ export default {
 
 const Template: StoryFn = args => ({
   components: { BaseButton },
-  setup() {
-    return { args }
-  },
+  setup: () => ({ args }),
   template: '<base-button v-bind="args" />',
 })
 
